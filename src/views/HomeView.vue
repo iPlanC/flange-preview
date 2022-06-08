@@ -189,19 +189,19 @@
         </el-collapse-item>
       </el-collapse>
     </div>
-    <HelloWorld ref="HelloWorld" />
+    <threeComponent ref="threeComponent" />
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import HelloWorld from "@/components/HelloWorld.vue";
+import threeComponent from "@/components/threeComponent.vue";
 import useClipboard from "vue-clipboard3";
 
 export default {
   name: "HomeView",
   components: {
-    HelloWorld,
+    threeComponent,
   },
   data: function () {
     return {
@@ -231,17 +231,16 @@ export default {
     },
     paramUpdate: function () {
       // eslint-disable-next-line prettier/prettier
-      this.$refs.HelloWorld.modifyCylinder(this.falange.flangeRadius, this.falange.flangeRadius, this.falange.flangeThickness, this.falange.segments);
-      console.log(this.falange.flangeThickness + this.falange.neckHeight);
+      this.$refs.threeComponent.modifyCylinder(this.falange.flangeRadius, this.falange.flangeRadius, this.falange.flangeThickness, this.falange.segments);
       // eslint-disable-next-line prettier/prettier
-      this.$refs.HelloWorld.createMergedNeck(this.falange.neckButtom, this.falange.neckTop, this.falange.neckHeight, 0, (this.falange.flangeThickness + this.falange.neckHeight) / 2, 0, this.falange.segments);
+      this.$refs.threeComponent.createMergedNeck(this.falange.neckButtom, this.falange.neckTop, this.falange.neckHeight, 0, (this.falange.flangeThickness + this.falange.neckHeight) / 2, 0, this.falange.segments);
       // eslint-disable-next-line prettier/prettier
-      this.$refs.HelloWorld.createCutHole(this.falange.centerRadius, this.falange.neckHeight + this.falange.neckHeight + this.falange.flangeThickness, 0, 0, 0, this.falange.segments);
+      this.$refs.threeComponent.createCutHole(this.falange.centerRadius, this.falange.neckHeight + this.falange.neckHeight + this.falange.flangeThickness, 0, 0, 0, this.falange.segments);
       // eslint-disable-next-line no-empty
       for (var i = 0; i < this.falange.holes; i++) {
         var angle = (360 / this.falange.holes) * i;
         // eslint-disable-next-line prettier/prettier
-        this.$refs.HelloWorld.createCutHole(this.falange.holesRadius, this.falange.flangeThickness, Math.sin((angle * Math.PI) / 180) * this.falange.holesPadding, 0, Math.cos((angle * Math.PI) / 180) * this.falange.holesPadding, this.falange.segments);
+        this.$refs.threeComponent.createCutHole(this.falange.holesRadius, this.falange.flangeThickness, Math.sin((angle * Math.PI) / 180) * this.falange.holesPadding, 0, Math.cos((angle * Math.PI) / 180) * this.falange.holesPadding, this.falange.segments);
       }
     },
     shareUrl: function () {
@@ -249,12 +248,10 @@ export default {
       const copy = async () => {
         var param = "";
         for (let key in this.falange) {
-          console.log(key, this.falange[key]);
           param = param + key + "=" + this.falange[key] + "&";
         }
-        param = param.slice(0, param.length - 1);
-        var url = "localhost:8080/?" + param;
-        await toClipboard(url);
+        param = window.location.href + "?" + param.slice(0, param.length - 1);
+        await toClipboard(param);
         this.$message({
           message: "复制成功",
           type: "success",
@@ -263,10 +260,11 @@ export default {
       return copy();
     },
     cameraSet: function (x, y, z) {
-      this.$refs.HelloWorld.cameraSet(x, y, z);
+      this.$refs.threeComponent.cameraSet(x, y, z);
     },
   },
   mounted: function () {
+    // console.log(this.$route.query);
     if (JSON.stringify(this.$route.query) != "{}") {
       this.falange.holes = Number(this.$route.query.holes);
       this.falange.holesPadding = Number(this.$route.query.holesPadding);
