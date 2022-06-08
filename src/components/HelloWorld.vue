@@ -1,138 +1,195 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br />
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener"
-        >vue-cli documentation</a
-      >.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li>
-        <a
-          href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel"
-          target="_blank"
-          rel="noopener"
-          >babel</a
-        >
-      </li>
-      <li>
-        <a
-          href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-router"
-          target="_blank"
-          rel="noopener"
-          >router</a
-        >
-      </li>
-      <li>
-        <a
-          href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-vuex"
-          target="_blank"
-          rel="noopener"
-          >vuex</a
-        >
-      </li>
-      <li>
-        <a
-          href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint"
-          target="_blank"
-          rel="noopener"
-          >eslint</a
-        >
-      </li>
-      <li>
-        <a
-          href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-unit-jest"
-          target="_blank"
-          rel="noopener"
-          >unit-jest</a
-        >
-      </li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li>
-        <a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a>
-      </li>
-      <li>
-        <a href="https://forum.vuejs.org" target="_blank" rel="noopener"
-          >Forum</a
-        >
-      </li>
-      <li>
-        <a href="https://chat.vuejs.org" target="_blank" rel="noopener"
-          >Community Chat</a
-        >
-      </li>
-      <li>
-        <a href="https://twitter.com/vuejs" target="_blank" rel="noopener"
-          >Twitter</a
-        >
-      </li>
-      <li>
-        <a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a>
-      </li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li>
-        <a href="https://router.vuejs.org" target="_blank" rel="noopener"
-          >vue-router</a
-        >
-      </li>
-      <li>
-        <a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a>
-      </li>
-      <li>
-        <a
-          href="https://github.com/vuejs/vue-devtools#vue-devtools"
-          target="_blank"
-          rel="noopener"
-          >vue-devtools</a
-        >
-      </li>
-      <li>
-        <a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener"
-          >vue-loader</a
-        >
-      </li>
-      <li>
-        <a
-          href="https://github.com/vuejs/awesome-vue"
-          target="_blank"
-          rel="noopener"
-          >awesome-vue</a
-        >
-      </li>
-    </ul>
+  <div>
+    <canvas id="three"></canvas>
   </div>
 </template>
 
 <script>
+// eslint-disable-next-line no-unused-vars
+import * as Three from "three";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+
+const ThreeBSP = require("three-js-csg")(Three);
+
 export default {
-  name: "HelloWorld",
-  props: {
-    msg: String,
+  data: function () {
+    return {
+      scene: null,
+      baseCylinder: null,
+    };
+  },
+  methods: {
+    // eslint-disable-next-line prettier/prettier
+    createCylinder: function (radiusTop = 1, radiusButtom = 1, height = 1, segments = 32) {
+      // console.log("createCylinder");
+      // eslint-disable-next-line prettier/prettier
+      var cylinder = new Three.CylinderGeometry(radiusTop, radiusButtom, height, segments);
+      this.baseCylinder = new Three.Mesh(
+        cylinder,
+        // eslint-disable-next-line prettier/prettier
+        new Three.MeshLambertMaterial({ color: 0x808080, side: Three.DoubleSide })
+      );
+      this.scene.add(this.baseCylinder);
+    },
+
+    // eslint-disable-next-line prettier/prettier
+    modifyCylinder: function (radiusTop = 1, radiusButtom = 1, height = 1, segments = 32) {
+      // console.log("modifyCylinder");
+      // eslint-disable-next-line prettier/prettier
+      this.scene.remove(this.baseCylinder);
+      // eslint-disable-next-line prettier/prettier
+      var cylinder = new Three.CylinderGeometry(radiusTop, radiusButtom, height, segments);
+      this.baseCylinder = new Three.Mesh(
+        cylinder,
+        // eslint-disable-next-line prettier/prettier
+        new Three.MeshLambertMaterial({ color: 0x808080, side: Three.DoubleSide })
+      );
+      this.scene.add(this.baseCylinder);
+    },
+
+    // eslint-disable-next-line prettier/prettier
+    createCutHole: function (radius = 1, height = 1, posx = 0, posy = 0, posz = 0, segments = 32) {
+      // console.log("createCutHoleCylinder");
+      // eslint-disable-next-line prettier/prettier
+      var cylinder = new Three.CylinderGeometry(radius, radius, height, segments);
+      var cylinderMesh = new Three.Mesh(
+        cylinder,
+        // eslint-disable-next-line prettier/prettier
+        new Three.MeshLambertMaterial({ color: 0xff0000 })
+      );
+      cylinderMesh.position.set(posx, posy, posz);
+      this.scene.add(cylinderMesh);
+      this.scene.remove(this.baseCylinder);
+      this.scene.remove(cylinderMesh);
+
+      try {
+        var baseCylinderBSP = new ThreeBSP(this.baseCylinder);
+        var cylinderBSP = new ThreeBSP(cylinderMesh);
+        var resultBSP = baseCylinderBSP.subtract(cylinderBSP);
+        this.baseCylinder = resultBSP.toMesh();
+        this.baseCylinder.geometry.computeFaceNormals();
+        this.baseCylinder.geometry.computeVertexNormals();
+        var material = new Three.MeshLambertMaterial({
+          color: 0x0000ff,
+          side: Three.DoubleSide,
+        });
+        this.baseCylinder.material = material;
+        this.scene.add(this.baseCylinder);
+      } catch (e) {
+        return;
+      }
+    },
+
+    // eslint-disable-next-line prettier/prettier
+    createMergedNeck: function (radiusButtom = 1, radiusTop = 1, height = 1, posx = 0, posy = 0, posz = 0, segments = 32) {
+      // console.log("createMergedNeck");
+
+      // eslint-disable-next-line prettier/prettier
+      var cylinder = new Three.CylinderGeometry(radiusTop, radiusButtom, height, segments);
+      var cylinderMesh = new Three.Mesh(
+        cylinder,
+        // eslint-disable-next-line prettier/prettier
+        new Three.MeshLambertMaterial({ color: 0xff0000 })
+      );
+      cylinderMesh.position.set(posx, posy, posz);
+      this.scene.add(cylinderMesh);
+      this.scene.remove(this.baseCylinder);
+      this.scene.remove(cylinderMesh);
+
+      try {
+        var baseCylinderBSP = new ThreeBSP(this.baseCylinder);
+        var cylinderBSP = new ThreeBSP(cylinderMesh);
+        var resultBSP = baseCylinderBSP.union(cylinderBSP);
+        this.baseCylinder = resultBSP.toMesh();
+        this.baseCylinder.geometry.computeFaceNormals();
+        this.baseCylinder.geometry.computeVertexNormals();
+        var material = new Three.MeshLambertMaterial({
+          color: 0x0000ff,
+          side: Three.DoubleSide,
+        });
+        this.baseCylinder.material = material;
+        this.scene.add(this.baseCylinder);
+      } catch (e) {
+        return;
+      }
+    },
+
+    cameraSet: function (x, y, z) {
+      this.scene.camera.position.set(x, y, z);
+    },
+  },
+  mounted: function () {
+    const scene = new Three.Scene();
+    scene.background = new Three.Color("#eee");
+    const canvas = document.querySelector("#three");
+    const renderer = new Three.WebGLRenderer({ canvas, antialias: true });
+    const camera = new Three.PerspectiveCamera(
+      50,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      1000
+    );
+    camera.position.set(10, 10, 10);
+    const controls = new OrbitControls(camera, renderer.domElement);
+
+    scene.background = new Three.Color("#eee");
+    //在代码上面声明场景等下面加这句:
+    scene.fog = new Three.Fog("#eee", 20, 100);
+    renderer.shadowMap.enabled = true;
+    controls.enableDamping = false;
+
+    function resizeRendererToDisplaySize(renderer) {
+      const canvas = renderer.domElement;
+      var width = window.innerWidth;
+      var height = window.innerHeight;
+      var canvasPixelWidth = canvas.width / window.devicePixelRatio;
+      var canvasPixelHeight = canvas.height / window.devicePixelRatio;
+
+      const needResize =
+        canvasPixelWidth !== width || canvasPixelHeight !== height;
+      if (needResize) {
+        renderer.setSize(width, height, false);
+      }
+      return needResize;
+    }
+
+    function animate() {
+      controls.update();
+      renderer.render(scene, camera);
+      requestAnimationFrame(animate);
+      if (resizeRendererToDisplaySize(renderer)) {
+        const canvas = renderer.domElement;
+        camera.aspect = canvas.clientWidth / canvas.clientHeight;
+        camera.updateProjectionMatrix();
+      }
+    }
+
+    animate();
+
+    const dirLight = new Three.DirectionalLight(0xffffff, 1);
+    //光源等位置
+    dirLight.position.set(-10, 10, -10);
+    //可以产生阴影
+    dirLight.castShadow = true;
+    dirLight.shadow.mapSize = new Three.Vector2(1024, 1024);
+    scene.add(dirLight);
+
+    const hemLight = new Three.HemisphereLight(0xffffff, 0xffffff, 0.6);
+    hemLight.position.set(0, 48, 0);
+    scene.add(hemLight);
+
+    this.scene = scene;
   },
 };
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
+<style>
+#three {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: -1;
 }
 </style>
