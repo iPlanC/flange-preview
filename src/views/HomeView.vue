@@ -1,193 +1,139 @@
 <template>
   <div class="home">
     <div class="controls">
-      <el-collapse v-model.number="param">
-        <el-collapse-item title="参数设置" name="param">
-          <el-row>
+      <el-collapse>
+        <el-collapse-item title="参数设置">
+          <el-row :gutter="20">
             <el-col :span="15">
-              <el-input v-model.number="falange.holes">
+              <el-input v-model.number="flange.holes">
                 <template #prepend>孔数</template>
                 <template #append>
                   <el-button-group>
-                    <el-button @click="holesMinus" circle small>
-                      <el-icon>
-                        <svg
-                          viewBox="0 0 1024 1024"
-                          xmlns="http://www.w3.org/2000/svg"
-                          data-v-78e17ca8=""
-                        >
-                          <path
-                            fill="currentColor"
-                            d="M128 544h768a16 16 0 1 0 0-16H128a16 16 0 0 0 0 16z"
-                          ></path>
-                        </svg>
-                      </el-icon>
-                    </el-button>
-                    <el-button @click="holesPlus" circle small>
-                      <el-icon>
-                        <svg
-                          viewBox="0 0 1024 1024"
-                          xmlns="http://www.w3.org/2000/svg"
-                          data-v-78e17ca8=""
-                        >
-                          <path
-                            fill="currentColor"
-                            d="M480 480V128a16 16 0 0 1 16 0v352h352a16 16 0 1 1 0 16H544v352a16 16 0 1 1-16 0V544H128a16 16 0 0 1 0-16h352z"
-                          ></path>
-                        </svg>
-                      </el-icon>
-                    </el-button>
+                    <el-button @click="holesMinus" circle small> - </el-button>
+                    <el-button @click="holesPlus" circle small> + </el-button>
                   </el-button-group>
                 </template>
               </el-input>
             </el-col>
             <el-col :span="9">
-              <el-input v-model.number="falange.holesPadding">
+              <el-input v-model.number="flange.holesPadding">
                 <template #prepend>孔间距</template>
               </el-input>
             </el-col>
           </el-row>
 
-          <el-row>
+          <el-row :gutter="20">
             <el-col :span="12">
-              <el-input v-model.number="falange.flangeRadius">
-                <template #prepend>法兰半径</template>
+              <el-input v-model.number="flange.material">
+                <template #prepend>法兰材质</template>
               </el-input>
             </el-col>
             <el-col :span="12">
-              <el-input v-model.number="falange.flangeThickness">
+              <el-input v-model.number="flange.flangeThickness">
                 <template #prepend>法兰厚度</template>
               </el-input>
             </el-col>
           </el-row>
 
-          <el-row>
-            <el-col :span="12">
-              <el-input v-model.number="falange.holesRadius">
+          <el-row :gutter="20">
+            <el-col :span="8">
+              <el-input v-model.number="flange.flangeRadius">
+                <template #prepend>法兰半径</template>
+              </el-input>
+            </el-col>
+            <el-col :span="8">
+              <el-input v-model.number="flange.holesRadius">
                 <template #prepend>切孔半径</template>
               </el-input>
             </el-col>
-            <el-col :span="12">
-              <el-input v-model.number="falange.centerRadius">
+            <el-col :span="8">
+              <el-input v-model.number="flange.centerRadius">
                 <template #prepend>切圆半径</template>
               </el-input>
             </el-col>
           </el-row>
 
-          <el-row>
+          <el-row :gutter="20">
             <el-col :span="8">
-              <el-input v-model.number="falange.neckButtom">
+              <el-input v-model.number="flange.neckbottom">
                 <template #prepend>颈底半径</template>
               </el-input>
             </el-col>
             <el-col :span="8">
-              <el-input v-model.number="falange.neckTop">
+              <el-input v-model.number="flange.neckTop">
                 <template #prepend>颈顶半径</template>
               </el-input>
             </el-col>
             <el-col :span="8">
-              <el-input v-model.number="falange.neckHeight">
+              <el-input v-model.number="flange.neckHeight">
                 <template #prepend>颈高</template>
               </el-input>
             </el-col>
           </el-row>
 
-          <el-row>
+          <el-row :gutter="20">
+            <el-col :span="8">
+              <el-input v-model.number="flange.contact">
+                <template #prepend>联系方式</template>
+              </el-input>
+            </el-col>
+            <el-col :span="8">
+              <el-input v-model.number="flange.amount">
+                <template #prepend>订购数量</template>
+              </el-input>
+            </el-col>
+            <el-col :span="8">
+              <el-input v-model.number="flange.buyer">
+                <template #prepend>购买厂家</template>
+              </el-input>
+            </el-col>
+          </el-row>
+
+          <el-row :gutter="20">
+            <el-col :span="24">
+              <el-input v-model="flangeDescribeLanguage"></el-input>
+            </el-col>
+          </el-row>
+
+          <el-row :gutter="20">
             <el-col :span="24">
               <span>模型面数精度</span>
               <el-slider
-                v-model.number="falange.segments"
+                v-model.number="flange.segments"
                 :min="3"
                 :max="128"
                 show-input
               ></el-slider>
             </el-col>
           </el-row>
-          <el-row>
+          <el-row :gutter="20">
+            <el-col :span="4">
+              <el-button type="info" @click="shareUrl" size="large">
+                分享模型
+              </el-button>
+            </el-col>
+            <el-col :span="8"></el-col>
+            <el-col :span="4">
+              <router-link to="/orders">
+                <el-button type="primary" size="large"> 订单列表 </el-button>
+              </router-link>
+            </el-col>
             <el-col :span="4">
               <el-button type="primary" @click="paramUpdate" size="large">
                 生成模型
               </el-button>
             </el-col>
             <el-col :span="4">
-              <el-button type="success" size="large"> 发布订单 </el-button>
-            </el-col>
-            <el-col :span="4">
-              <el-button type="info" @click="shareUrl" size="large">
-                分享模型
-              </el-button>
-            </el-col>
-            <el-col
-              :span="3"
-              style="
-                display: flex;
-                justify-content: center;
-                align-items: center;
-              "
-            >
-              <el-button
-                type="info"
-                @click="cameraSet(90, 0, 0)"
-                size="small"
-                disabled
-              >
-                正视图
-              </el-button>
-            </el-col>
-            <el-col
-              :span="3"
-              style="
-                display: flex;
-                justify-content: center;
-                align-items: center;
-              "
-            >
-              <el-button
-                type="info"
-                @click="cameraSet(0, 90, 0)"
-                size="small"
-                disabled
-              >
-                左视图
-              </el-button>
-            </el-col>
-            <el-col
-              :span="3"
-              style="
-                display: flex;
-                justify-content: center;
-                align-items: center;
-              "
-            >
-              <el-button
-                type="info"
-                @click="cameraSet(0, 0, 90)"
-                size="small"
-                disabled
-              >
-                顶视图
-              </el-button>
-            </el-col>
-            <el-col
-              :span="3"
-              style="
-                display: flex;
-                justify-content: center;
-                align-items: center;
-              "
-            >
-              <el-button
-                type="info"
-                @click="cameraSet(45, 45, 45)"
-                size="small"
-                disabled
-              >
-                正交图
+              <el-button type="primary" @click="order" size="large">
+                立即下单
               </el-button>
             </el-col>
           </el-row>
         </el-collapse-item>
       </el-collapse>
+    </div>
+    <div class="copyright">
+      <copyrightComponent />
     </div>
     <threeComponent ref="threeComponent" />
   </div>
@@ -196,59 +142,87 @@
 <script>
 // @ is an alias to /src
 import threeComponent from "@/components/threeComponent.vue";
+import copyrightComponent from "@/components/copyrightComponent.vue";
 import useClipboard from "vue-clipboard3";
+import axios from "axios";
 
 export default {
   name: "HomeView",
   components: {
     threeComponent,
+    copyrightComponent,
   },
   data: function () {
     return {
-      param: "param",
-      falange: {
+      flangeDescribeLanguage: "",
+      flange: {
         holes: 4,
         holesPadding: 2.25,
         flangeRadius: 3,
         flangeThickness: 0.5,
+        material: "塑料",
         holesRadius: 0.25,
         centerRadius: 0.5,
-        neckButtom: 1.5,
+        neckbottom: 1.5,
         neckTop: 1,
         neckHeight: 1,
         segments: 16,
+        contact: "12345678910",
+        amount: 1,
+        detail: "",
+        buyer: "某公司",
       },
     };
   },
   methods: {
     holesMinus: function () {
-      if (this.falange.holes > 0) {
-        this.falange.holes--;
+      if (this.flange.holes > 0) {
+        this.flange.holes--;
       }
     },
     holesPlus: function () {
-      this.falange.holes++;
+      this.flange.holes++;
     },
     paramUpdate: function () {
       // eslint-disable-next-line prettier/prettier
-      this.$refs.threeComponent.modifyCylinder(this.falange.flangeRadius, this.falange.flangeRadius, this.falange.flangeThickness, this.falange.segments);
+      this.$refs.threeComponent.modifyCylinder(this.flange.flangeRadius, this.flange.flangeRadius, this.flange.flangeThickness, this.flange.segments);
       // eslint-disable-next-line prettier/prettier
-      this.$refs.threeComponent.createMergedNeck(this.falange.neckButtom, this.falange.neckTop, this.falange.neckHeight, 0, (this.falange.flangeThickness + this.falange.neckHeight) / 2, 0, this.falange.segments);
+      this.$refs.threeComponent.createMergedNeck(this.flange.neckbottom, this.flange.neckTop, this.flange.neckHeight, 0, (this.flange.flangeThickness + this.flange.neckHeight) / 2, 0, this.flange.segments);
       // eslint-disable-next-line prettier/prettier
-      this.$refs.threeComponent.createCutHole(this.falange.centerRadius, this.falange.neckHeight + this.falange.neckHeight + this.falange.flangeThickness, 0, 0, 0, this.falange.segments);
+      this.$refs.threeComponent.createCutHole(this.flange.centerRadius, this.flange.neckHeight + this.flange.neckHeight + this.flange.flangeThickness, 0, 0, 0, this.flange.segments);
       // eslint-disable-next-line no-empty
-      for (var i = 0; i < this.falange.holes; i++) {
-        var angle = (360 / this.falange.holes) * i;
+      for (var i = 0; i < this.flange.holes; i++) {
+        var angle = (360 / this.flange.holes) * i;
         // eslint-disable-next-line prettier/prettier
-        this.$refs.threeComponent.createCutHole(this.falange.holesRadius, this.falange.flangeThickness, Math.sin((angle * Math.PI) / 180) * this.falange.holesPadding, 0, Math.cos((angle * Math.PI) / 180) * this.falange.holesPadding, this.falange.segments);
+        this.$refs.threeComponent.createCutHole(this.flange.holesRadius, this.flange.flangeThickness, Math.sin((angle * Math.PI) / 180) * this.flange.holesPadding, 0, Math.cos((angle * Math.PI) / 180) * this.flange.holesPadding, this.flange.segments);
       }
+      this.flangeDescribeLanguage =
+        this.flange.holes +
+        "/" +
+        this.flange.holesPadding +
+        "/" +
+        this.flange.material +
+        "/" +
+        this.flange.flangeThickness +
+        "/" +
+        this.flange.flangeRadius +
+        "/" +
+        this.flange.holesRadius +
+        "/" +
+        this.flange.centerRadius +
+        "/" +
+        this.flange.neckbottom +
+        "/" +
+        this.flange.neckTop +
+        "/" +
+        this.flange.neckHeight;
     },
     shareUrl: function () {
       const { toClipboard } = useClipboard();
       const copy = async () => {
         var param = "";
-        for (let key in this.falange) {
-          param = param + key + "=" + this.falange[key] + "&";
+        for (let key in this.flange) {
+          param = param + key + "=" + this.flange[key] + "&";
         }
         param = window.location.href + "?" + param.slice(0, param.length - 1);
         await toClipboard(param);
@@ -262,20 +236,46 @@ export default {
     cameraSet: function (x, y, z) {
       this.$refs.threeComponent.cameraSet(x, y, z);
     },
+    order: function () {
+      this.$message({
+        showClose: true,
+        message: "下单中",
+        type: "info",
+      });
+      axios.post("api/saveFlange", this.flange).then(
+        () => {
+          this.$message({
+            showClose: true,
+            message: "下单成功",
+            type: "success",
+          });
+        },
+        () => {
+          this.$message({
+            showClose: true,
+            message: "下单失败",
+            type: "error",
+          });
+        }
+      );
+    },
   },
   mounted: function () {
     // console.log(this.$route.query);
     if (JSON.stringify(this.$route.query) != "{}") {
-      this.falange.holes = Number(this.$route.query.holes);
-      this.falange.holesPadding = Number(this.$route.query.holesPadding);
-      this.falange.flangeRadius = Number(this.$route.query.flangeRadius);
-      this.falange.flangeThickness = Number(this.$route.query.flangeThickness);
-      this.falange.holesRadius = Number(this.$route.query.holesRadius);
-      this.falange.centerRadius = Number(this.$route.query.centerRadius);
-      this.falange.neckButtom = Number(this.$route.query.neckButtom);
-      this.falange.neckTop = Number(this.$route.query.neckTop);
-      this.falange.neckHeight = Number(this.$route.query.neckHeight);
-      this.falange.segments = Number(this.$route.query.segments);
+      this.flange.holes = Number(this.$route.query.holes);
+      this.flange.holesPadding = Number(this.$route.query.holesPadding);
+      this.flange.flangeRadius = Number(this.$route.query.flangeRadius);
+      this.flange.flangeThickness = Number(this.$route.query.flangeThickness);
+      this.flange.flangeMaterial = this.$route.query.flangeMaterial;
+      this.flange.holesRadius = Number(this.$route.query.holesRadius);
+      this.flange.centerRadius = Number(this.$route.query.centerRadius);
+      this.flange.neckbottom = Number(this.$route.query.neckbottom);
+      this.flange.neckTop = Number(this.$route.query.neckTop);
+      this.flange.neckHeight = Number(this.$route.query.neckHeight);
+      this.flange.segments = Number(this.$route.query.segments);
+      this.flange.contact = this.$route.query.contact;
+      this.flange.amount = Number(this.$route.query.amount);
     }
     this.paramUpdate();
   },
@@ -289,7 +289,8 @@ export default {
 }
 
 .controls {
-  width: 50%;
+  min-width: 50%;
+  max-width: 100%;
   height: 100%;
   background-color: gray;
   border-radius: 0.5em;
@@ -312,5 +313,18 @@ export default {
 
 .slider-demo-block .demonstration + .el-slider {
   flex: 0 0 70%;
+}
+
+.home .copyright {
+  z-index: 100;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  padding: 5px;
+  background-color: var(--el-color-bg-color-dark);
+}
+
+el-collapse-item :hover {
+  background-color: red;
 }
 </style>

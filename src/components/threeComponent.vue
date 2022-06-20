@@ -1,5 +1,8 @@
 <template>
   <div>
+    <div id="front"><canvas id="front_view"></canvas><b>正视图</b></div>
+    <div id="side"><canvas id="side_view"></canvas><b>侧视图</b></div>
+    <div id="overlook"><canvas id="overlook_view"></canvas><b>俯视图</b></div>
     <canvas id="three"></canvas>
   </div>
 </template>
@@ -20,10 +23,10 @@ export default {
   },
   methods: {
     // eslint-disable-next-line prettier/prettier
-    createCylinder: function (radiusTop = 1, radiusButtom = 1, height = 1, segments = 32) {
+    createCylinder: function (radiusTop = 1, radiusbottom = 1, height = 1, segments = 32) {
       // console.log("createCylinder");
       // eslint-disable-next-line prettier/prettier
-      var cylinder = new Three.CylinderGeometry(radiusTop, radiusButtom, height, segments);
+      var cylinder = new Three.CylinderGeometry(radiusTop, radiusbottom, height, segments);
       this.baseCylinder = new Three.Mesh(
         cylinder,
         // eslint-disable-next-line prettier/prettier
@@ -33,12 +36,12 @@ export default {
     },
 
     // eslint-disable-next-line prettier/prettier
-    modifyCylinder: function (radiusTop = 1, radiusButtom = 1, height = 1, segments = 32) {
+    modifyCylinder: function (radiusTop = 1, radiusbottom = 1, height = 1, segments = 32) {
       // console.log("modifyCylinder");
       // eslint-disable-next-line prettier/prettier
       this.scene.remove(this.baseCylinder);
       // eslint-disable-next-line prettier/prettier
-      var cylinder = new Three.CylinderGeometry(radiusTop, radiusButtom, height, segments);
+      var cylinder = new Three.CylinderGeometry(radiusTop, radiusbottom, height, segments);
       this.baseCylinder = new Three.Mesh(
         cylinder,
         // eslint-disable-next-line prettier/prettier
@@ -55,7 +58,7 @@ export default {
       var cylinderMesh = new Three.Mesh(
         cylinder,
         // eslint-disable-next-line prettier/prettier
-        new Three.MeshLambertMaterial({ color: 0xff0000 })
+        new Three.MeshLambertMaterial({ color: 0x808080 })
       );
       cylinderMesh.position.set(posx, posy, posz);
       this.scene.add(cylinderMesh);
@@ -70,7 +73,7 @@ export default {
         this.baseCylinder.geometry.computeFaceNormals();
         this.baseCylinder.geometry.computeVertexNormals();
         var material = new Three.MeshLambertMaterial({
-          color: 0x0000ff,
+          color: 0x808080,
           side: Three.DoubleSide,
         });
         this.baseCylinder.material = material;
@@ -81,11 +84,11 @@ export default {
     },
 
     // eslint-disable-next-line prettier/prettier
-    createMergedNeck: function (radiusButtom = 1, radiusTop = 1, height = 1, posx = 0, posy = 0, posz = 0, segments = 32) {
+    createMergedNeck: function (radiusbottom = 1, radiusTop = 1, height = 1, posx = 0, posy = 0, posz = 0, segments = 32) {
       // console.log("createMergedNeck");
 
       // eslint-disable-next-line prettier/prettier
-      var cylinder = new Three.CylinderGeometry(radiusTop, radiusButtom, height, segments);
+      var cylinder = new Three.CylinderGeometry(radiusTop, radiusbottom, height, segments);
       var cylinderMesh = new Three.Mesh(
         cylinder,
         // eslint-disable-next-line prettier/prettier
@@ -108,6 +111,7 @@ export default {
           side: Three.DoubleSide,
         });
         this.baseCylinder.material = material;
+        this.baseCylinder.castShadow = true;
         this.scene.add(this.baseCylinder);
       } catch (e) {
         return;
@@ -122,14 +126,32 @@ export default {
     const scene = new Three.Scene();
     scene.background = new Three.Color("#eee");
     const canvas = document.querySelector("#three");
+    const front_view = document.querySelector("#front_view");
+    const side_view = document.querySelector("#side_view");
+    const overlook_view = document.querySelector("#overlook_view");
+
     const renderer = new Three.WebGLRenderer({ canvas, antialias: true });
-    const camera = new Three.PerspectiveCamera(
-      50,
-      window.innerWidth / window.innerHeight,
-      0.1,
-      1000
-    );
-    camera.position.set(10, 10, 10);
+    // eslint-disable-next-line prettier/prettier
+    const front_view_renderer = new Three.WebGLRenderer({ canvas:front_view, antialias: true });
+    // eslint-disable-next-line prettier/prettier
+    const side_view_renderer = new Three.WebGLRenderer({ canvas:side_view, antialias: true });
+    // eslint-disable-next-line prettier/prettier
+    const overlook_view_renderer = new Three.WebGLRenderer({ canvas:overlook_view, antialias: true });
+    // eslint-disable-next-line prettier/prettier
+    const camera = new Three.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+    // eslint-disable-next-line prettier/prettier
+    const front_view_camera = new Three.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+    // eslint-disable-next-line prettier/prettier
+    const side_view_camera = new Three.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+    // eslint-disable-next-line prettier/prettier
+    const overlook_view_camera = new Three.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.set(5, 5, 5);
+    front_view_camera.position.set(0, 0, 10);
+    side_view_camera.position.set(10, 0, 0);
+    overlook_view_camera.position.set(0, 10, 0);
+    front_view_camera.lookAt(0, 0, 0);
+    side_view_camera.lookAt(0, 0, 0);
+    overlook_view_camera.lookAt(0, 0, 0);
     const controls = new OrbitControls(camera, renderer.domElement);
 
     scene.background = new Three.Color("#eee");
@@ -156,8 +178,26 @@ export default {
     function animate() {
       controls.update();
       renderer.render(scene, camera);
+      front_view_renderer.render(scene, front_view_camera);
+      side_view_renderer.render(scene, side_view_camera);
+      overlook_view_renderer.render(scene, overlook_view_camera);
       requestAnimationFrame(animate);
       if (resizeRendererToDisplaySize(renderer)) {
+        const canvas = renderer.domElement;
+        camera.aspect = canvas.clientWidth / canvas.clientHeight;
+        camera.updateProjectionMatrix();
+      }
+      if (resizeRendererToDisplaySize(front_view_renderer)) {
+        const canvas = renderer.domElement;
+        camera.aspect = canvas.clientWidth / canvas.clientHeight;
+        camera.updateProjectionMatrix();
+      }
+      if (resizeRendererToDisplaySize(side_view_renderer)) {
+        const canvas = renderer.domElement;
+        camera.aspect = canvas.clientWidth / canvas.clientHeight;
+        camera.updateProjectionMatrix();
+      }
+      if (resizeRendererToDisplaySize(overlook_view_renderer)) {
         const canvas = renderer.domElement;
         camera.aspect = canvas.clientWidth / canvas.clientHeight;
         camera.updateProjectionMatrix();
@@ -166,16 +206,15 @@ export default {
 
     animate();
 
-    const dirLight = new Three.DirectionalLight(0xffffff, 1);
-    //光源等位置
-    dirLight.position.set(-10, 10, -10);
-    //可以产生阴影
-    dirLight.castShadow = true;
-    dirLight.shadow.mapSize = new Three.Vector2(1024, 1024);
-    scene.add(dirLight);
+    const spotLight = new Three.SpotLight(0xffffff, 0.6);
+    spotLight.position.set(0, 20, 0);
+    scene.add(spotLight);
+    const spotLight2 = new Three.SpotLight(0xffffff, 0.6);
+    spotLight2.position.set(0, -20, 0);
+    scene.add(spotLight2);
 
     const hemLight = new Three.HemisphereLight(0xffffff, 0xffffff, 0.6);
-    hemLight.position.set(0, 48, 0);
+    hemLight.position.set(0, 50, 0);
     scene.add(hemLight);
 
     this.scene = scene;
@@ -184,12 +223,82 @@ export default {
 </script>
 
 <style>
+canvas {
+  box-sizing: border-box;
+  border: 0.5px solid #000;
+}
+
 #three {
-  width: 100%;
-  height: 100%;
+  width: 50%;
+  height: 50%;
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  z-index: -1;
+}
+
+#front {
+  width: 50%;
+  height: 50%;
   position: fixed;
   left: 0;
   top: 0;
   z-index: -1;
+}
+#front b {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin: 5px;
+}
+#front_view {
+  width: 50%;
+  height: 50%;
+  position: fixed;
+  left: 0;
+  top: 0;
+}
+#side {
+  width: 50%;
+  height: 50%;
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: -1;
+}
+#side b {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  margin: 5px;
+}
+#side_view {
+  width: 50%;
+  height: 50%;
+  position: fixed;
+  right: 0;
+  top: 0;
+}
+
+#overlook {
+  width: 50%;
+  height: 50%;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  z-index: -1;
+}
+#overlook b {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 5px;
+}
+#overlook_view {
+  width: 50%;
+  height: 50%;
+  position: fixed;
+  left: 0;
+  bottom: 0;
 }
 </style>
