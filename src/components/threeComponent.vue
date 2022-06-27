@@ -3,7 +3,7 @@
     <div id="front"><canvas id="front_view"></canvas><b>正视图</b></div>
     <div id="side"><canvas id="side_view"></canvas><b>侧视图</b></div>
     <div id="overlook"><canvas id="overlook_view"></canvas><b>俯视图</b></div>
-    <canvas id="three"></canvas>
+    <div id="three_div"><canvas id="three"></canvas><b>三维图</b></div>
   </div>
 </template>
 
@@ -235,6 +235,19 @@ canvas {
   right: 0;
   bottom: 0;
   z-index: -1;
+}
+#three_div b {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 5px;
+}
+#three_div {
+  width: 50%;
+  height: 50%;
+  position: fixed;
+  right: 0;
+  bottom: 0;
 }
 
 #front {

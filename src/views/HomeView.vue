@@ -97,7 +97,9 @@
 
           <el-row :gutter="20">
             <el-col :span="24">
-              <span>模型面数精度</span>
+              <span
+                >模型面数精度(精度越高边缘越平滑 但生成时间越长 默认16)</span
+              >
               <el-slider
                 v-model.number="flange.segments"
                 :min="3"
@@ -108,25 +110,31 @@
           </el-row>
           <el-row :gutter="20">
             <el-col :span="4">
-              <el-button type="info" @click="shareUrl" size="large">
+              <el-button type="primary" @click="shareUrl" size="large">
                 分享模型
               </el-button>
             </el-col>
-            <el-col :span="8"></el-col>
+            <el-col :span="4">
+              <a href="http://127.0.0.1:9999/Spring_ssm">
+                <el-button type="primary" @click="paramUpdate" size="large">
+                  批量下单
+                </el-button>
+              </a>
+            </el-col>
+            <el-col :span="8">
+              <el-button-group>
+                <el-button type="primary" @click="paramUpdate" size="large">
+                  生成模型
+                </el-button>
+                <el-button type="primary" @click="order" size="large">
+                  立即下单
+                </el-button>
+              </el-button-group>
+            </el-col>
             <el-col :span="4">
               <router-link to="/orders">
                 <el-button type="primary" size="large"> 订单列表 </el-button>
               </router-link>
-            </el-col>
-            <el-col :span="4">
-              <el-button type="primary" @click="paramUpdate" size="large">
-                生成模型
-              </el-button>
-            </el-col>
-            <el-col :span="4">
-              <el-button type="primary" @click="order" size="large">
-                立即下单
-              </el-button>
             </el-col>
           </el-row>
         </el-collapse-item>
@@ -145,6 +153,8 @@ import threeComponent from "@/components/threeComponent.vue";
 import copyrightComponent from "@/components/copyrightComponent.vue";
 import useClipboard from "vue-clipboard3";
 import axios from "axios";
+// eslint-disable-next-line no-unused-vars
+import { read, utils } from "xlsx";
 
 export default {
   name: "HomeView",
@@ -170,7 +180,8 @@ export default {
         contact: "12345678910",
         amount: 1,
         detail: "",
-        buyer: "某公司",
+        buyer: "",
+        buyer_identifier: "",
       },
     };
   },
@@ -242,7 +253,7 @@ export default {
         message: "下单中",
         type: "info",
       });
-      axios.post("api/saveFlange", this.flange).then(
+      axios.post("flangeApi/saveFlange", this.flange).then(
         () => {
           this.$message({
             showClose: true,
@@ -259,8 +270,20 @@ export default {
         }
       );
     },
+    downloadTemplate: function () {
+      let dom = document.createElement("a");
+      dom.href = "导入表模板.xlsx";
+      dom.download = "导入表模板.xlsx";
+      document.body.appendChild(dom);
+      // 点击下载
+      dom.click();
+      document.body.removeChild(dom);
+    },
   },
   mounted: function () {
+    if (window.sessionStorage.getItem("customer") == null) {
+      this.$router.push("/");
+    }
     // console.log(this.$route.query);
     if (JSON.stringify(this.$route.query) != "{}") {
       this.flange.holes = Number(this.$route.query.holes);
@@ -277,6 +300,13 @@ export default {
       this.flange.contact = this.$route.query.contact;
       this.flange.amount = Number(this.$route.query.amount);
     }
+    console.log(JSON.parse(window.sessionStorage.getItem("customer")));
+    this.flange.buyer = JSON.parse(
+      window.sessionStorage.getItem("customer")
+    ).username;
+    this.flange.buyer_identifier = JSON.parse(
+      window.sessionStorage.getItem("customer")
+    ).identifier;
     this.paramUpdate();
   },
 };
