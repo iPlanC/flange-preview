@@ -115,11 +115,11 @@
               </el-button>
             </el-col>
             <el-col :span="4">
-              <a href="http://127.0.0.1:9999/Spring_ssm">
+              <router-link to="/bulk">
                 <el-button type="primary" @click="paramUpdate" size="large">
                   批量下单
                 </el-button>
-              </a>
+              </router-link>
             </el-col>
             <el-col :span="8">
               <el-button-group>
