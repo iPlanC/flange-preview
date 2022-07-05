@@ -116,9 +116,7 @@
             </el-col>
             <el-col :span="4">
               <router-link to="/bulk">
-                <el-button type="primary" @click="paramUpdate" size="large">
-                  批量下单
-                </el-button>
+                <el-button type="primary" size="large"> 批量下单 </el-button>
               </router-link>
             </el-col>
             <el-col :span="8">
@@ -135,6 +133,11 @@
               <router-link to="/orders">
                 <el-button type="primary" size="large"> 订单列表 </el-button>
               </router-link>
+            </el-col>
+            <el-col :span="4">
+              <el-button type="primary" @click="logout" size="large">
+                退出登录
+              </el-button>
             </el-col>
           </el-row>
         </el-collapse-item>
@@ -253,7 +256,11 @@ export default {
         message: "下单中",
         type: "info",
       });
-      axios.post("flangeApi/saveFlange", this.flange).then(
+      var link =
+        process.env.NODE_ENV === "development"
+          ? "flangeApi/saveFlange"
+          : "http://localhost:8081/flange/flange/saveFlange";
+      axios.post(link, this.flange).then(
         () => {
           this.$message({
             showClose: true,
@@ -272,12 +279,16 @@ export default {
     },
     downloadTemplate: function () {
       let dom = document.createElement("a");
-      dom.href = "导入表模板.xlsx";
+      dom.href = "importTemplate.xlsx";
       dom.download = "导入表模板.xlsx";
       document.body.appendChild(dom);
       // 点击下载
       dom.click();
       document.body.removeChild(dom);
+    },
+    logout: function () {
+      window.sessionStorage.clear("customer");
+      this.$router.push("/");
     },
   },
   mounted: function () {
@@ -300,7 +311,6 @@ export default {
       this.flange.contact = this.$route.query.contact;
       this.flange.amount = Number(this.$route.query.amount);
     }
-    console.log(JSON.parse(window.sessionStorage.getItem("customer")));
     this.flange.buyer = JSON.parse(
       window.sessionStorage.getItem("customer")
     ).username;

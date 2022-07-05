@@ -2,7 +2,7 @@
  * @Author: PlanC14 planc2333@outlook.com
  * @Date: 2022-06-20 18:47:18
  * @LastEditors: PlanC14 planc2333@outlook.com
- * @LastEditTime: 2022-06-25 16:57:53
+ * @LastEditTime: 2022-07-05 10:25:24
  * @FilePath: \flange-preview\src\views\orderView.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
@@ -18,7 +18,9 @@
       </el-button>
     </router-link>
     <el-table
-      :data="orders"
+      :data="filteredOrders"
+      :default-sort="{ prop: 'amount', order: 'descending' }"
+      table-layout="auto"
       style="position: absolute; width: 100%; height: 100%; left: 0; top: 0"
       border
       stripe
@@ -26,12 +28,18 @@
       v-loading="loading"
     >
       <el-table-column label="订单列表">
-        <el-table-column label="数量" prop="amount"></el-table-column>
-        <el-table-column label="买家" prop="buyer"></el-table-column>
-        <el-table-column
-          label="买家识别码"
-          prop="buyer_identifier"
-        ></el-table-column>
+        <el-table-column label="买家" prop="buyer" sortable></el-table-column>
+        <el-table-column label="买家唯一识别码" prop="buyer_identifier">
+          <template #header>
+            <el-input
+              v-model="search"
+              size="small"
+              placeholder="买家唯一识别码"
+              style="width: 16rem"
+            />
+          </template>
+        </el-table-column>
+        <el-table-column label="数量" prop="amount" sortable></el-table-column>
         <el-table-column label="中心半径" prop="centerRadius"></el-table-column>
         <el-table-column label="联系方式" prop="contact"></el-table-column>
         <el-table-column label="法兰半径" prop="flangeRadius"></el-table-column>
@@ -56,14 +64,29 @@ export default {
     return {
       orders: [],
       loading: true,
+      search: "",
     };
+  },
+  computed: {
+    filteredOrders: function () {
+      return this.orders.filter((order) => {
+        return (
+          order.buyer_identifier.includes(this.search) ||
+          order.buyer_identifier.startsWith(this.search) ||
+          order.buyer_identifier.endsWith(this.search)
+        );
+      });
+    },
   },
   mounted: function () {
     if (window.sessionStorage.getItem("customer") == null) {
       this.$router.push("/");
     }
-    axios.get("flangeApi/getAllOrder").then((response) => {
-      console.log(response);
+    var link =
+      process.env.NODE_ENV === "development"
+        ? "flangeApi/getAllOrder"
+        : "http://localhost:8081/flange/flange/getAllOrder";
+    axios.get(link).then((response) => {
       this.orders = response.data;
       this.loading = false;
     });

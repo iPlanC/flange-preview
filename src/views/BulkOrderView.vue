@@ -34,7 +34,6 @@
       border
       stripe
       height="250"
-      v-loading="loading"
     >
       <el-table-column label="订单列表">
         <el-table-column label="挖孔数" prop="holes"></el-table-column>
@@ -94,7 +93,7 @@ export default {
   methods: {
     downloadTemplate: function () {
       let dom = document.createElement("a");
-      dom.href = "导入表模板.xlsx";
+      dom.href = "importTemplate.xlsx";
       dom.download = "导入表模板.xlsx";
       document.body.appendChild(dom);
       dom.click();
@@ -143,7 +142,6 @@ export default {
             that.flange.buyer_identifier = JSON.parse(
               window.sessionStorage.getItem("customer")
             ).identifier;
-            console.log(that.flange);
             that.flanges.push(item);
             // that.order(that.flange);
           });
@@ -154,29 +152,33 @@ export default {
       fileReader.readAsBinaryString(files[0]);
     },
     order: function () {
+      var that = this;
       this.$message({
         showClose: true,
         message: "下单中",
         type: "info",
       });
       this.flanges.forEach(function (item) {
-        console.log(item);
         item.buyer = JSON.parse(
           window.sessionStorage.getItem("customer")
         ).username;
         item.buyer_identifier = JSON.parse(
           window.sessionStorage.getItem("customer")
         ).identifier;
-        axios.post("flangeApi/saveFlange", item).then(
+        var link =
+          process.env.NODE_ENV === "development"
+            ? "flangeApi/saveFlange"
+            : "http://localhost:8081/flange/flange/saveFlange";
+        axios.post(link, item).then(
           () => {
-            this.$message({
+            that.$message({
               showClose: true,
               message: "下单成功",
               type: "success",
             });
           },
           () => {
-            this.$message({
+            that.$message({
               showClose: true,
               message: "下单失败",
               type: "error",
@@ -184,6 +186,7 @@ export default {
           }
         );
       });
+      this.$router.push("/orders");
     },
   },
   mounted: function () {

@@ -30,7 +30,7 @@
           <template #prepend>密码</template>
         </el-input>
         <el-input v-model.number="passwordCheck" show-password>
-          <template #prepend>密码</template>
+          <template #prepend>重复密码</template>
         </el-input>
         <el-button type="primary" size="large" v-on:click="register"
           >注册</el-button
@@ -56,8 +56,11 @@ export default {
       var params = new URLSearchParams();
       params.append("username", this.username);
       params.append("password", this.password);
-      axios.post("customerApi/verify", params).then((response) => {
-        console.log(response);
+      var link =
+        process.env.NODE_ENV === "development"
+          ? "customerApi/verify"
+          : "http://localhost:8081/flange/customer/verify";
+      axios.post(link, params).then((response) => {
         if (response.data != "") {
           this.$message({
             showClose: true,
@@ -83,8 +86,11 @@ export default {
         var params = new URLSearchParams();
         params.append("username", this.username);
         params.append("password", this.password);
-        axios.post("customerApi/register", params).then((response) => {
-          console.log(response);
+        var link =
+          process.env.NODE_ENV === "development"
+            ? "customerApi/register"
+            : "http://localhost:8081/flange/customer/register";
+        axios.post(link, params).then((response) => {
           if (response.data == "") {
             this.$message({
               showClose: true,

@@ -1,15 +1,19 @@
-<!--
- * @Author: PlanC14 planc2333@outlook.com
- * @Date: 2022-06-19 11:14:19
- * @LastEditors: PlanC14 planc2333@outlook.com
- * @LastEditTime: 2022-06-25 16:50:39
- * @FilePath: \flange-preview\src\components\copyrightComponent.vue
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
--->
 <template>
-  <span>
-    Copyright 2022 <a href="mailto:planc2333@outlook.com">PlanC</a> All rights
-    reserved.
+  <span style="float: right">
+    <a
+      href="mailto:2386116982@qq.com?cc=planc2333@outlook.com&subject=flange-preview%20test"
+      >点此</a
+    >
+    与作者取得联系.
+  </span>
+  <br />
+  <span style="float: right">
+    Copyright 2022
+    <a
+      href="mailto:2386116982@qq.com?cc=planc2333@outlook.com&subject=flange-preview%20test"
+      >PlanC</a
+    >
+    All rights reserved.
   </span>
 </template>
 
