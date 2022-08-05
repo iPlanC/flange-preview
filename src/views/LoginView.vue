@@ -2,7 +2,7 @@
   <div
     style="
       display: flex;
-      flex-direction: row;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
     "
@@ -15,12 +15,16 @@
         <el-input v-model.number="password" show-password>
           <template #prepend>密码</template>
         </el-input>
-        <el-button type="primary" size="large" v-on:click="login"
+        <el-button
+          type="primary"
+          size="large"
+          v-on:click="login"
+          :loading="loading"
           >登录</el-button
         >
       </div>
     </div>
-    <el-divider direction="vertical" />
+    <el-divider />
     <div class="loginView">
       <div class="buyerLogin">
         <el-input v-model.number="username">
@@ -32,10 +36,24 @@
         <el-input v-model.number="passwordCheck" show-password>
           <template #prepend>重复密码</template>
         </el-input>
-        <el-button type="primary" size="large" v-on:click="register"
+        <el-button
+          type="primary"
+          size="large"
+          v-on:click="register"
+          :loading="loading"
           >注册</el-button
         >
       </div>
+    </div>
+    <el-divider />
+    <div class="loginView">
+      <el-button
+        type="success"
+        size="large"
+        v-on:click="vlogin"
+        :loading="loading"
+        >游客登录</el-button
+      >
     </div>
   </div>
 </template>
@@ -46,13 +64,15 @@ export default {
   name: "LoginView",
   data: function () {
     return {
-      username: "某公司1",
-      password: "1234561",
-      passwordCheck: "1234561",
+      username: "",
+      password: "",
+      passwordCheck: "",
+      loading: false,
     };
   },
   methods: {
     login: function () {
+      this.loading = true;
       var params = new URLSearchParams();
       params.append("username", this.username);
       params.append("password", this.password);
@@ -81,7 +101,21 @@ export default {
         }
       });
     },
+    vlogin: function () {
+      this.loading = true;
+      this.$message({
+        showClose: true,
+        message: "登陆成功",
+        type: "success",
+      });
+      window.sessionStorage.setItem(
+        "customer",
+        '{"id":0, "username":"visitor", "password":"127870930D65C57EE65FCC47F2170D38", "identifier":"373298F3F9480A3C8B67D2C63787D2B2"}'
+      );
+      this.$router.push("/home");
+    },
     register: function () {
+      this.loading = true;
       if (this.password == this.passwordCheck) {
         var params = new URLSearchParams();
         params.append("username", this.username);

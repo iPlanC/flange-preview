@@ -1,152 +1,96 @@
 <template>
   <div class="home">
     <div class="controls">
-      <el-collapse>
-        <el-collapse-item title="参数设置">
-          <el-row :gutter="20">
-            <el-col :span="15">
-              <el-input v-model.number="flange.holes">
-                <template #prepend>孔数</template>
-                <template #append>
-                  <el-button-group>
-                    <el-button @click="holesMinus" circle small> - </el-button>
-                    <el-button @click="holesPlus" circle small> + </el-button>
-                  </el-button-group>
-                </template>
-              </el-input>
-            </el-col>
-            <el-col :span="9">
-              <el-input v-model.number="flange.holesPadding">
-                <template #prepend>孔间距</template>
-              </el-input>
-            </el-col>
-          </el-row>
-
-          <el-row :gutter="20">
-            <el-col :span="12">
-              <el-input v-model.number="flange.material">
-                <template #prepend>法兰材质</template>
-              </el-input>
-            </el-col>
-            <el-col :span="12">
-              <el-input v-model.number="flange.flangeThickness">
-                <template #prepend>法兰厚度</template>
-              </el-input>
-            </el-col>
-          </el-row>
-
-          <el-row :gutter="20">
-            <el-col :span="8">
-              <el-input v-model.number="flange.flangeRadius">
-                <template #prepend>法兰半径</template>
-              </el-input>
-            </el-col>
-            <el-col :span="8">
-              <el-input v-model.number="flange.holesRadius">
-                <template #prepend>切孔半径</template>
-              </el-input>
-            </el-col>
-            <el-col :span="8">
-              <el-input v-model.number="flange.centerRadius">
-                <template #prepend>切圆半径</template>
-              </el-input>
-            </el-col>
-          </el-row>
-
-          <el-row :gutter="20">
-            <el-col :span="8">
-              <el-input v-model.number="flange.neckbottom">
-                <template #prepend>颈底半径</template>
-              </el-input>
-            </el-col>
-            <el-col :span="8">
-              <el-input v-model.number="flange.neckTop">
-                <template #prepend>颈顶半径</template>
-              </el-input>
-            </el-col>
-            <el-col :span="8">
-              <el-input v-model.number="flange.neckHeight">
-                <template #prepend>颈高</template>
-              </el-input>
-            </el-col>
-          </el-row>
-
-          <el-row :gutter="20">
-            <el-col :span="8">
-              <el-input v-model.number="flange.contact">
-                <template #prepend>联系方式</template>
-              </el-input>
-            </el-col>
-            <el-col :span="8">
-              <el-input v-model.number="flange.amount">
-                <template #prepend>订购数量</template>
-              </el-input>
-            </el-col>
-            <el-col :span="8">
-              <el-input v-model.number="flange.buyer">
-                <template #prepend>购买厂家</template>
-              </el-input>
-            </el-col>
-          </el-row>
-
-          <el-row :gutter="20">
-            <el-col :span="24">
-              <el-input v-model="flangeDescribeLanguage"></el-input>
-            </el-col>
-          </el-row>
-
-          <el-row :gutter="20">
-            <el-col :span="24">
-              <span
-                >模型面数精度(精度越高边缘越平滑 但生成时间越长 默认16)</span
-              >
-              <el-slider
-                v-model.number="flange.segments"
-                :min="3"
-                :max="128"
-                show-input
-              ></el-slider>
-            </el-col>
-          </el-row>
-          <el-row :gutter="20">
-            <el-col :span="4">
-              <el-button type="primary" @click="shareUrl" size="large">
-                分享模型
-              </el-button>
-            </el-col>
-            <el-col :span="4">
-              <router-link to="/bulk">
-                <el-button type="primary" size="large"> 批量下单 </el-button>
-              </router-link>
-            </el-col>
-            <el-col :span="8">
+      <el-tabs type="border-card">
+        <el-tab-pane label="预览">
+          <threeComponent ref="threeComponent" />
+        </el-tab-pane>
+        <el-tab-pane label="参数">
+          <el-input v-model.number="flange.holes">
+            <template #prepend>孔数</template>
+            <template #append>
               <el-button-group>
-                <el-button type="primary" @click="paramUpdate" size="large">
-                  生成模型
-                </el-button>
-                <el-button type="primary" @click="order" size="large">
-                  立即下单
-                </el-button>
+                <el-button @click="holesMinus" circle small> - </el-button>
+                <el-button @click="holesPlus" circle small> + </el-button>
               </el-button-group>
-            </el-col>
-            <el-col :span="4">
-              <router-link to="/orders">
-                <el-button type="primary" size="large"> 订单列表 </el-button>
-              </router-link>
-            </el-col>
-            <el-col :span="4">
-              <el-button type="primary" @click="logout" size="large">
-                退出登录
-              </el-button>
-            </el-col>
-          </el-row>
-        </el-collapse-item>
-      </el-collapse>
+            </template>
+          </el-input>
+          <el-input v-model.number="flange.holesPadding">
+            <template #prepend>孔间距</template>
+          </el-input>
+
+          <el-input v-model.number="flange.material">
+            <template #prepend>法兰材质</template>
+          </el-input>
+          <el-input v-model.number="flange.flangeThickness">
+            <template #prepend>法兰厚度</template>
+          </el-input>
+
+          <el-input v-model.number="flange.flangeRadius">
+            <template #prepend>法兰半径</template>
+          </el-input>
+          <el-input v-model.number="flange.holesRadius">
+            <template #prepend>切孔半径</template>
+          </el-input>
+          <el-input v-model.number="flange.centerRadius">
+            <template #prepend>切圆半径</template>
+          </el-input>
+
+          <el-input v-model.number="flange.neckbottom">
+            <template #prepend>颈底半径</template>
+          </el-input>
+          <el-input v-model.number="flange.neckTop">
+            <template #prepend>颈顶半径</template>
+          </el-input>
+          <el-input v-model.number="flange.neckHeight">
+            <template #prepend>颈高</template>
+          </el-input>
+
+          <el-input v-model.number="flange.contact">
+            <template #prepend>联系方式</template>
+          </el-input>
+          <el-input v-model.number="flange.amount">
+            <template #prepend>订购数量</template>
+          </el-input>
+          <el-input v-model.number="flange.buyer">
+            <template #prepend>购买厂家</template>
+          </el-input>
+          <el-input v-model="flangeDescribeLanguage"></el-input>
+
+          <span>模型面数精度(精度越高边缘越平滑 但生成时间越长 默认16)</span>
+          <el-slider
+            v-model.number="flange.segments"
+            :min="3"
+            :max="128"
+            show-input
+          ></el-slider>
+
+          <el-button type="primary" @click="shareUrl" size="large">
+            分享模型
+          </el-button>
+          <router-link to="/bulk">
+            <el-button type="primary" size="large"> 批量下单 </el-button>
+          </router-link>
+          <el-button-group>
+            <el-button type="primary" @click="paramUpdate" size="large">
+              生成模型
+            </el-button>
+            <el-button type="primary" @click="order" size="large">
+              立即下单
+            </el-button>
+          </el-button-group>
+          <router-link to="/orders">
+            <el-button type="primary" size="large"> 订单列表 </el-button>
+          </router-link>
+          <el-button type="primary" @click="logout" size="large">
+            退出登录
+          </el-button>
+        </el-tab-pane>
+      </el-tabs>
     </div>
     <div class="copyright">
       <copyrightComponent />
     </div>
-    <threeComponent ref="threeComponent" />
   </div>
 </template>
 
@@ -298,8 +242,8 @@ export default {
     },
   },
   mounted: function () {
-    if (this.isMobile()) {
-      this.$router.push("/homeM");
+    if (!this.isMobile()) {
+      this.$router.push("/home");
     }
 
     if (window.sessionStorage.getItem("customer") == null) {
