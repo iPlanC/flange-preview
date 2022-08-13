@@ -36,7 +36,7 @@
             <template #prepend>切圆半径</template>
           </el-input>
 
-          <el-input v-model.number="flange.neckbottom">
+          <el-input v-model.number="flange.neckBottom">
             <template #prepend>颈底半径</template>
           </el-input>
           <el-input v-model.number="flange.neckTop">
@@ -120,7 +120,7 @@ export default {
         material: "塑料",
         holesRadius: 0.25,
         centerRadius: 0.5,
-        neckbottom: 1.5,
+        neckBottom: 1.5,
         neckTop: 1,
         neckHeight: 1,
         segments: 16,
@@ -145,7 +145,7 @@ export default {
       // eslint-disable-next-line prettier/prettier
       this.$refs.threeComponent.modifyCylinder(this.flange.flangeRadius, this.flange.flangeRadius, this.flange.flangeThickness, this.flange.segments);
       // eslint-disable-next-line prettier/prettier
-      this.$refs.threeComponent.createMergedNeck(this.flange.neckbottom, this.flange.neckTop, this.flange.neckHeight, 0, (this.flange.flangeThickness + this.flange.neckHeight) / 2, 0, this.flange.segments);
+      this.$refs.threeComponent.createMergedNeck(this.flange.neckBottom, this.flange.neckTop, this.flange.neckHeight, 0, (this.flange.flangeThickness + this.flange.neckHeight) / 2, 0, this.flange.segments);
       // eslint-disable-next-line prettier/prettier
       this.$refs.threeComponent.createCutHole(this.flange.centerRadius, this.flange.neckHeight + this.flange.neckHeight + this.flange.flangeThickness, 0, 0, 0, this.flange.segments);
       // eslint-disable-next-line no-empty
@@ -169,7 +169,7 @@ export default {
         "/" +
         this.flange.centerRadius +
         "/" +
-        this.flange.neckbottom +
+        this.flange.neckBottom +
         "/" +
         this.flange.neckTop +
         "/" +
@@ -200,10 +200,7 @@ export default {
         message: "下单中",
         type: "info",
       });
-      var link =
-        process.env.NODE_ENV === "development"
-          ? "flangeApi/saveFlange"
-          : "http://localhost:8081/flange/flange/saveFlange";
+      var link = "/php/createOrder.php";
       axios.post(link, this.flange).then(
         () => {
           this.$message({
@@ -258,7 +255,7 @@ export default {
       this.flange.flangeMaterial = this.$route.query.flangeMaterial;
       this.flange.holesRadius = Number(this.$route.query.holesRadius);
       this.flange.centerRadius = Number(this.$route.query.centerRadius);
-      this.flange.neckbottom = Number(this.$route.query.neckbottom);
+      this.flange.neckBottom = Number(this.$route.query.neckBottom);
       this.flange.neckTop = Number(this.$route.query.neckTop);
       this.flange.neckHeight = Number(this.$route.query.neckHeight);
       this.flange.segments = Number(this.$route.query.segments);

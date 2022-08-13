@@ -76,10 +76,7 @@ export default {
       var params = new URLSearchParams();
       params.append("username", this.username);
       params.append("password", this.password);
-      var link =
-        process.env.NODE_ENV === "development"
-          ? "customerApi/verify"
-          : "http://localhost:8081/flange/customer/verify";
+      var link = "/php/verifyCustomer.php";
       axios.post(link, params).then((response) => {
         if (response.data != "") {
           this.$message({
@@ -120,12 +117,9 @@ export default {
         var params = new URLSearchParams();
         params.append("username", this.username);
         params.append("password", this.password);
-        var link =
-          process.env.NODE_ENV === "development"
-            ? "customerApi/register"
-            : "http://localhost:8081/flange/customer/register";
+        var link = "/php/createCustomer.php";
         axios.post(link, params).then((response) => {
-          if (response.data == "") {
+          if (response.data == "true") {
             this.$message({
               showClose: true,
               message: "注册成功",

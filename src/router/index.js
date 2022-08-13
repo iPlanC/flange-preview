@@ -7,11 +7,19 @@
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
 import { createRouter, createWebHashHistory } from "vue-router";
+import NProgress from "nprogress";
 import LoginView from "../views/LoginView.vue";
 import HomeView from "../views/HomeView.vue";
 import HomeMView from "../views/HomeMView.vue";
 import OrderView from "../views/OrderView.vue";
 import BulkOrderView from "../views/BulkOrderView.vue";
+
+import "nprogress/nprogress.css";
+
+NProgress.configure({
+  easing: "ease", // 动画方式
+  showSpinner: true, // 是否显示加载ico
+});
 
 const routes = [
   {
@@ -44,6 +52,16 @@ const routes = [
 const router = createRouter({
   history: createWebHashHistory(),
   routes,
+});
+
+router.beforeEach(() => {
+  NProgress.start();
+  console.log("beforeEach");
+});
+
+router.afterEach(() => {
+  NProgress.done();
+  console.log("afterEach");
 });
 
 export default router;

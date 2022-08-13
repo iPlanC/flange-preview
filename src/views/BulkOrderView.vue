@@ -78,7 +78,7 @@ export default {
         material: "塑料",
         holesRadius: 0.25,
         centerRadius: 0.5,
-        neckbottom: 1.5,
+        neckBottom: 1.5,
         neckTop: 1,
         neckHeight: 1,
         segments: 16,
@@ -131,7 +131,7 @@ export default {
             that.flange.material = item.material;
             that.flange.holesRadius = item.holesRadius;
             that.flange.centerRadius = item.centerRadius;
-            that.flange.neckbottom = item.neckBottom;
+            that.flange.neckBottom = item.neckBottom;
             that.flange.neckTop = item.neckTop;
             that.flange.neckHeight = item.neckHeight;
             that.flange.contact = item.contact;
@@ -165,10 +165,7 @@ export default {
         item.buyer_identifier = JSON.parse(
           window.sessionStorage.getItem("customer")
         ).identifier;
-        var link =
-          process.env.NODE_ENV === "development"
-            ? "flangeApi/saveFlange"
-            : "http://localhost:8081/flange/flange/saveFlange";
+        var link = "/php/createOrder.php";
         axios.post(link, item).then(
           () => {
             that.$message({

@@ -1,11 +1,3 @@
-<!--
- * @Author: PlanC14 planc2333@outlook.com
- * @Date: 2022-06-20 18:47:18
- * @LastEditors: PlanC14 planc2333@outlook.com
- * @LastEditTime: 2022-08-05 21:55:52
- * @FilePath: \flange-preview\src\views\orderView.vue
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
--->
 <template>
   <div>
     <router-link to="/home">
@@ -40,6 +32,7 @@
           </template>
         </el-table-column>
         <el-table-column label="数量" prop="amount" sortable></el-table-column>
+        <el-table-column label="材质" prop="material"></el-table-column>
         <el-table-column label="中心半径" prop="centerRadius"></el-table-column>
         <el-table-column label="联系方式" prop="contact"></el-table-column>
         <el-table-column label="法兰半径" prop="flangeRadius"></el-table-column>
@@ -82,10 +75,7 @@ export default {
     if (window.sessionStorage.getItem("customer") == null) {
       this.$router.push("/");
     }
-    var link =
-      process.env.NODE_ENV === "development"
-        ? "flangeApi/getAllOrder"
-        : "http://localhost:8081/flange/flange/getAllOrder";
+    var link = "/php/getAllOrder.php";
     axios.get(link).then((response) => {
       this.orders = response.data;
       this.loading = false;
