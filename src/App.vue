@@ -2,7 +2,7 @@
  * @Author: PlanC14 planc2333@outlook.com
  * @Date: 2022-06-06 22:45:39
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2022-10-06 21:48:51
+ * @LastEditTime: 2022-10-06 22:20:04
  * @FilePath: \anime1d:\Projects\flange-preview\src\App.vue
 -->
 <template>

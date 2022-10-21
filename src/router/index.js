@@ -2,8 +2,8 @@
  * @Author: PlanC14 planc2333@outlook.com
  * @Date: 2022-06-06 22:45:39
  * @LastEditors: Please set LastEditors
- * @LastEditTime: 2022-10-06 21:48:20
- * @FilePath: flange-preview\src\router\index.js
+ * @LastEditTime: 2022-10-06 22:22:47
+ * @FilePath: \anime1d:\Projects\flange-preview\src\router\index.js
  */
 import { createRouter, createWebHashHistory } from "vue-router";
 import NProgress from "nprogress";
